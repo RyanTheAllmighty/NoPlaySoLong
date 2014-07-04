@@ -37,11 +37,11 @@ public class PlayTimeCommand implements CommandExecutor {
         }
 
         if (args.length >= 1) {
-            player.sendMessage(args[0] + " has played for " + plugin.getPlayerPlayTime(args[0])
-                    + " seconds!");
+            player.sendMessage(ChatColor.GREEN + args[0] + " has played for "
+                    + plugin.getPlayerPlayTime(args[0]) + " seconds!");
         } else {
-            player.sendMessage("You have played for " + plugin.getPlayerPlayTime(player.getName())
-                    + " seconds!");
+            player.sendMessage(ChatColor.GREEN + "You have played for "
+                    + plugin.getPlayerPlayTime(player.getName()) + " seconds!");
         }
         return true;
     }
