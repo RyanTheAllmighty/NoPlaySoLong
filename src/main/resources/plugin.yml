@@ -8,3 +8,6 @@ commands:
   debug:
     description: Toggles your debugging status for this plugin.
     usage: /debug
+  playtime:
+    description: Gets the amount of time you've been playing for.
+    usage: /playtime
