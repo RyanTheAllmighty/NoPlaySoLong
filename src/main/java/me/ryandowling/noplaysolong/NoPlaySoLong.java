@@ -15,7 +15,6 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,50 +27,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class NoPlaySoLong extends JavaPlugin {
     private final PlayerListener playerListener = new PlayerListener(this);
     private final BlockListener blockListener = new BlockListener();
-    private final Map<Player, Boolean> debugees = new HashMap<Player, Boolean>();
     private Map<String, Integer> timePlayed = new HashMap<String, Integer>();
     private Map<String, Integer> timeLoggedIn = new HashMap<String, Integer>();
 
     @Override
     public void onDisable() {
-        // TODO: Place any custom disable code here
-
-        // NOTE: All registered events are automatically unregistered when a plugin is disabled
-
-        // EXAMPLE: Custom code, here we just output some info so we can check all is well
-        getLogger().info("Goodbye world!");
+        this.savePlayTime(); // Save the playtime to file on plugin disable
     }
 
     @Override
     public void onEnable() {
-        // TODO: Place any custom enable code here including the registration of any events
-
         // Register our events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(playerListener, this);
         pm.registerEvents(blockListener, this);
 
         // Register our commands
-        getCommand("pos").setExecutor(new PosCommand());
-        getCommand("debug").setExecutor(new DebugCommand(this));
         getCommand("playtime").setExecutor(new PlayTimeCommand(this));
 
-        // EXAMPLE: Custom code, here we just output some info so we can check all is well
         PluginDescriptionFile pdfFile = this.getDescription();
         getLogger().info(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!");
+
+        // Load the playtime from file
         this.loadPlayTime();
-    }
-
-    public boolean isDebugging(final Player player) {
-        if (debugees.containsKey(player)) {
-            return debugees.get(player);
-        } else {
-            return false;
-        }
-    }
-
-    public void setDebugging(final Player player, final boolean value) {
-        debugees.put(player, value);
     }
 
     public int getPlayerPlayTime(String player) {

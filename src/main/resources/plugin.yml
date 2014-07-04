@@ -2,12 +2,17 @@ name: No Play So Long
 main: me.ryandowling.noplaysolong.NoPlaySoLong
 version: 0.0.0.1
 commands:
-  pos:
-    description: Displays your position or teleports you to another.
-    usage: "Usage: '/pos' to get current position, or '/pos x y z' to teleport to x,y,z"
-  debug:
-    description: Toggles your debugging status for this plugin.
-    usage: /debug
   playtime:
-    description: Gets the amount of time you've been playing for.
-    usage: /playtime
+    description: Gets the amount of time a user has been playing for. Leave user out for self.
+permissions:
+  noplaysolong.*:
+    description: Gives access to all No Play So Long commands
+    children:
+      noplaysolong.playtime.self: true
+      noplaysolong.playtime.others: true
+  noplaysolong.playtime.self:
+    description: Gives access to the /playtime command to check own playtime
+    default: true
+  noplaysolong.playtime.others:
+    description: Gives access to the /playtime command to check others playtime
+    default: op

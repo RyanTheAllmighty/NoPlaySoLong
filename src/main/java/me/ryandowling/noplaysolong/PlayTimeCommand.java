@@ -6,6 +6,7 @@
  */
 package me.ryandowling.noplaysolong;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,10 +24,25 @@ public class PlayTimeCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return false;
         }
+
         Player player = (Player) sender;
 
-        player.sendMessage("Total time played: " + plugin.getPlayerPlayTime(player.getName())
-                + " seconds!");
+        if (args.length >= 1 && !player.hasPermission("noplaysolong.playtime.others")) {
+            player.sendMessage(ChatColor.RED
+                    + "You don't have permission to check other players playtime!");
+            return false;
+        } else if (!player.hasPermission("noplaysolong.playtime.self")) {
+            player.sendMessage(ChatColor.RED + "You don't have permission to check your playtime!");
+            return false;
+        }
+
+        if (args.length >= 1) {
+            player.sendMessage(args[0] + " has played for " + plugin.getPlayerPlayTime(args[0])
+                    + " seconds!");
+        } else {
+            player.sendMessage("You have played for " + plugin.getPlayerPlayTime(player.getName())
+                    + " seconds!");
+        }
         return true;
     }
 }
