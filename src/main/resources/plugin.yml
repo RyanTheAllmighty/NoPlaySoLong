@@ -3,17 +3,21 @@ main: me.ryandowling.noplaysolong.NoPlaySoLong
 version: 0.0.0.1
 commands:
   playtime:
-    description: Gets the amount of time a user has been playing for. Leave user out for self.
+    description: Commands for the No Play So Long plugin relating to players time played.
     aliases: pt
 permissions:
   noplaysolong.*:
-    description: Gives access to all No Play So Long commands
+    description: Gives access to all No Play So Long commands.
     children:
-      noplaysolong.playtime.self: true
-      noplaysolong.playtime.others: true
-  noplaysolong.playtime.self:
-    description: Gives access to the /playtime command to check own playtime
+      noplaysolong.playtime.check.add: true
+      noplaysolong.playtime.check.self: true
+      noplaysolong.playtime.check.others: true
+  noplaysolong.playtime.add:
+    description: Gives access to be able to add time to a players play time.
+    default: op
+  noplaysolong.playtime.check.self:
+    description: Gives access to the /playtime check command to check own playtime.
     default: true
-  noplaysolong.playtime.others:
-    description: Gives access to the /playtime command to check others playtime
+  noplaysolong.playtime.check.others:
+    description: Gives access to the /playtime check command to check others playtime.
     default: op

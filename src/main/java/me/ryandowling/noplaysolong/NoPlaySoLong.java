@@ -52,10 +52,17 @@ public class NoPlaySoLong extends JavaPlugin {
         this.loadPlayTime();
     }
 
+    public void addPlayTime(String player, int seconds) {
+        if (this.timePlayed.containsKey(player)) {
+            this.timePlayed.put(player, this.timePlayed.get(player) + seconds);
+        } else {
+            this.timePlayed.put(player, seconds);
+        }
+    }
+
     public int getPlayerPlayTime(String player) {
         int timePlayed = 0;
         if (this.timePlayed.containsKey(player)) {
-            getLogger().info("Found key for player " + player);
             timePlayed += this.timePlayed.get(player);
         }
         if (this.timeLoggedIn.containsKey(player)) {

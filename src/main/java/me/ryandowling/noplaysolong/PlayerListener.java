@@ -20,13 +20,11 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        plugin.getLogger().info(event.getPlayer().getName() + " joined the server! :D");
         plugin.setPlayerLoggedIn(event.getPlayer().getName());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.getLogger().info(event.getPlayer().getName() + " left the server! :'(");
         plugin.setPlayerLoggedOut(event.getPlayer().getName());
     }
 }
