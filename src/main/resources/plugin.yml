@@ -4,6 +4,7 @@ version: 0.0.0.1
 commands:
   playtime:
     description: Gets the amount of time a user has been playing for. Leave user out for self.
+    aliases: pt
 permissions:
   noplaysolong.*:
     description: Gives access to all No Play So Long commands
