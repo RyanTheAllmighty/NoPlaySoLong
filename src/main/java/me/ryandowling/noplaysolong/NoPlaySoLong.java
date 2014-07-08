@@ -189,7 +189,7 @@ public class NoPlaySoLong extends JavaPlugin {
             int timePlayed = (int) ((System.currentTimeMillis() / 1000) - this.timeLoggedIn
                     .get(player));
             if (this.timePlayed.containsKey(player)) {
-                this.timePlayed.put(this.timePlayed.get(player) + player, timePlayed);
+                this.timePlayed.put(player, this.timePlayed.get(player) + timePlayed);
             } else {
                 this.timePlayed.put(player, timePlayed);
             }
