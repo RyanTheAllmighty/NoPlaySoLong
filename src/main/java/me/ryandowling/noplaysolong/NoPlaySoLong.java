@@ -15,6 +15,8 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.ryandowling.noplaysolong.exceptions.UnknownPlayerException;
+
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,6 +59,14 @@ public class NoPlaySoLong extends JavaPlugin {
             this.timePlayed.put(player, this.timePlayed.get(player) + seconds);
         } else {
             this.timePlayed.put(player, seconds);
+        }
+    }
+
+    public void removePlayTime(String player, int seconds) throws UnknownPlayerException {
+        if (this.timePlayed.containsKey(player)) {
+            this.timePlayed.put(player, this.timePlayed.get(player) + seconds);
+        } else {
+            throw new UnknownPlayerException(player);
         }
     }
 

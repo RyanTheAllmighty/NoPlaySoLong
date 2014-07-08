@@ -10,10 +10,14 @@ permissions:
     description: Gives access to all No Play So Long commands.
     children:
       noplaysolong.playtime.check.add: true
+      noplaysolong.playtime.check.remove: true
       noplaysolong.playtime.check.self: true
       noplaysolong.playtime.check.others: true
   noplaysolong.playtime.add:
     description: Gives access to be able to add time to a players play time.
+    default: op
+  noplaysolong.playtime.remove:
+    description: Gives access to be able to remove time from a players play time.
     default: op
   noplaysolong.playtime.check.self:
     description: Gives access to the /playtime check command to check own playtime.

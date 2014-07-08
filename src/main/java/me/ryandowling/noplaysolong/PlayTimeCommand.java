@@ -6,6 +6,8 @@
  */
 package me.ryandowling.noplaysolong;
 
+import me.ryandowling.noplaysolong.exceptions.UnknownPlayerException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,7 +37,7 @@ public class PlayTimeCommand implements CommandExecutor {
         if (args[0].equals("add") && args.length == 3) {
             if (!player.hasPermission("noplaysolong.playtime.add")) {
                 player.sendMessage(ChatColor.RED
-                        + "You don't have permission to add to a players playtime!!");
+                        + "You don't have permission to add time to a players playtime!!");
                 return false;
             } else {
                 try {
@@ -45,6 +47,27 @@ public class PlayTimeCommand implements CommandExecutor {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     player.sendMessage(ChatColor.RED + "Invalid number of seconds given!");
+                    return false;
+                }
+                return true;
+            }
+        } else if (args[0].equals("remove") && args.length == 3) {
+            if (!player.hasPermission("noplaysolong.playtime.remove")) {
+                player.sendMessage(ChatColor.RED
+                        + "You don't have permission to remove time from a players playtime!!");
+                return false;
+            } else {
+                try {
+                    plugin.removePlayTime(args[1], Integer.parseInt(args[2]));
+                    player.sendMessage(ChatColor.GREEN + "Removed " + Integer.parseInt(args[2])
+                            + " seconds of playtime from " + args[1]);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    player.sendMessage(ChatColor.RED + "Invalid number of seconds given!");
+                    return false;
+                } catch (UnknownPlayerException e) {
+                    e.printStackTrace();
+                    player.sendMessage(ChatColor.RED + e.getMessage());
                     return false;
                 }
                 return true;
@@ -66,8 +89,8 @@ public class PlayTimeCommand implements CommandExecutor {
                             + "You don't have permission to check other players playtime!");
                     return false;
                 } else {
-                    player.sendMessage(ChatColor.GREEN + args[0] + " has played for "
-                            + plugin.getPlayerPlayTime(args[0]) + " seconds!");
+                    player.sendMessage(ChatColor.GREEN + args[1] + " has played for "
+                            + plugin.getPlayerPlayTime(args[1]) + " seconds!");
                     return true;
                 }
             }
