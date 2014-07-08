@@ -14,6 +14,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.ryandowling.noplaysolong.exceptions.UnknownPlayerException;
 
@@ -33,6 +35,7 @@ public class NoPlaySoLong extends JavaPlugin {
     private Map<String, Integer> timeLoggedIn = new HashMap<String, Integer>();
 
     private boolean shutdownHookAdded = false;
+    private Timer timer = null;
 
     @Override
     public void onDisable() {
@@ -66,6 +69,16 @@ public class NoPlaySoLong extends JavaPlugin {
 
         // Load the playtime from file
         this.loadPlayTime();
+
+        if (timer == null) {
+            this.timer = new Timer();
+            this.timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    savePlayTime(); // Save playtime every 10 minutes
+                }
+            }, 30 * 1000, 10 * 60 * 1000);
+        }
     }
 
     public void addPlayTime(String player, int seconds) {
