@@ -15,16 +15,23 @@ public class PlayerListener implements Listener {
     private final NoPlaySoLong plugin;
 
     public PlayerListener(NoPlaySoLong instance) {
-        plugin = instance;
+        this.plugin = instance;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        plugin.setPlayerLoggedIn(event.getPlayer().getName());
+        if (this.plugin.getTimeAllowedInSeconds(event.getPlayer().getName()) <= 0) {
+            event.getPlayer().kickPlayer(
+                    "You have exceeded the time allowed to play! Come back in "
+                            + this.plugin.secondsToDaysHoursSecondsString(this.plugin
+                                    .secondsUntilNextDay()) + "!");
+        } else {
+            this.plugin.setPlayerLoggedIn(event.getPlayer().getName());
+        }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.setPlayerLoggedOut(event.getPlayer().getName());
+        this.plugin.setPlayerLoggedOut(event.getPlayer().getName());
     }
 }

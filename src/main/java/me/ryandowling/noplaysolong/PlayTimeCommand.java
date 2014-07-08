@@ -27,7 +27,7 @@ public class PlayTimeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            return false;
+            Player player = (Player) sender;
         }
 
         Player player = (Player) sender;
@@ -82,10 +82,12 @@ public class PlayTimeCommand implements CommandExecutor {
                             + "You don't have permission to check your playtime!");
                     return false;
                 } else {
-                    player.sendMessage(ChatColor.GREEN + "You have played for "
-                            + plugin.getPlayerPlayTime(player.getName()) + " seconds and have "
-                            + plugin.getTimeAllowedInSeconds(player.getName())
-                            + " seconds remaining!");
+                    player.sendMessage(ChatColor.GREEN
+                            + "You have played for "
+                            + plugin.getPlayerPlayTime(player.getName())
+                            + " seconds and have "
+                            + plugin.secondsToDaysHoursSecondsString(plugin
+                                    .getTimeAllowedInSeconds(player.getName())) + " remaining!");
                     return true;
                 }
             } else {
@@ -94,9 +96,13 @@ public class PlayTimeCommand implements CommandExecutor {
                             + "You don't have permission to check other players playtime!");
                     return false;
                 } else {
-                    player.sendMessage(ChatColor.GREEN + args[1] + " has played for "
-                            + plugin.getPlayerPlayTime(args[1]) + " seconds and have "
-                            + plugin.getTimeAllowedInSeconds(args[1]) + " seconds remaining!");
+                    player.sendMessage(ChatColor.GREEN
+                            + args[1]
+                            + " has played for "
+                            + plugin.getPlayerPlayTime(args[1])
+                            + " seconds and have "
+                            + plugin.secondsToDaysHoursSecondsString(plugin
+                                    .getTimeAllowedInSeconds(args[1])) + " remaining!");
                     return true;
                 }
             }

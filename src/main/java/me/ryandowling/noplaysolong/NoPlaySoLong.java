@@ -19,6 +19,7 @@ import java.util.TimerTask;
 
 import me.ryandowling.noplaysolong.exceptions.UnknownPlayerException;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,7 +36,8 @@ public class NoPlaySoLong extends JavaPlugin {
     private Map<String, Integer> timeLoggedIn = new HashMap<String, Integer>();
 
     private boolean shutdownHookAdded = false;
-    private Timer timer = null;
+    private Timer savePlayTimeTimer = null;
+    private Timer checkPlayTimeTimer = null;
 
     @Override
     public void onDisable() {
@@ -90,15 +92,48 @@ public class NoPlaySoLong extends JavaPlugin {
         // Load the playtime from file
         this.loadPlayTime();
 
-        if (timer == null) {
-            this.timer = new Timer();
-            this.timer.scheduleAtFixedRate(new TimerTask() {
+        if (savePlayTimeTimer == null) {
+            this.savePlayTimeTimer = new Timer();
+            this.savePlayTimeTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     savePlayTime(); // Save playtime every 10 minutes
                 }
             }, 30 * 1000, 10 * 60 * 1000);
         }
+
+        if (checkPlayTimeTimer == null) {
+            this.checkPlayTimeTimer = new Timer();
+            this.checkPlayTimeTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    for (Player player : getServer().getOnlinePlayers()) {
+                        if (getTimeAllowedInSeconds(player.getName()) <= 0) {
+                            player.kickPlayer("You have exceeded the time allowed to play! Come back in "
+                                    + secondsToDaysHoursSecondsString(secondsUntilNextDay()) + "!");
+                        }
+                    }
+                }
+            }, 30 * 1000, 1 * 60 * 1000);
+        }
+    }
+
+    public int secondsUntilNextDay() {
+        int timeStarted = getConfig().getInt("timeStarted");
+        return (int) ((System.currentTimeMillis() / 1000) - timeStarted);
+    }
+
+    public String secondsToDaysHoursSecondsString(int secondsToConvert) {
+        int totalSecs = 0;
+        if (secondsToConvert < 86400) {
+            totalSecs = 86400 - secondsToConvert;
+        } else {
+            totalSecs = secondsToConvert % 86400;
+        }
+        int hours = totalSecs / 3600;
+        int minutes = (totalSecs % 3600) / 60;
+        int seconds = totalSecs % 60;
+        return String.format("%02d hours, %02d minutes & %02d seconds", hours, minutes, seconds);
     }
 
     public int getTimeAllowedInSeconds(String player) {
