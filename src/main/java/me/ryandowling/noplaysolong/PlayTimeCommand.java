@@ -6,6 +6,9 @@
  */
 package me.ryandowling.noplaysolong;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.ryandowling.noplaysolong.exceptions.UnknownPlayerException;
 
 import org.bukkit.ChatColor;
@@ -102,12 +105,18 @@ public class PlayTimeCommand implements CommandExecutor {
     }
 
     public void printUsage(Player player) {
-        String[] usage = {
-                ChatColor.YELLOW + "/playtime usage:",
-                ChatColor.AQUA + "/playtime add [user] [time]" + ChatColor.RESET
-                        + " - Add time in seconds to the user's playtime.",
-                ChatColor.AQUA + "/playtime check [user]" + ChatColor.RESET
-                        + " - Check the time played for a given user, or if blank, for yourself." };
-        player.sendMessage(usage);
+        List<String> usage = new ArrayList<String>();
+        usage.add(ChatColor.YELLOW + "/playtime usage:");
+        if (player.hasPermission("noplaysolong.playtime.add")) {
+            usage.add(ChatColor.AQUA + "/playtime add [user] [time]" + ChatColor.RESET
+                    + " - Add time in seconds to the user's playtime.");
+        }
+        usage.add(ChatColor.AQUA + "/playtime check [user]" + ChatColor.RESET
+                + " - Check the time played for a given user, or if blank, for yourself.");
+        if (player.hasPermission("noplaysolong.playtime.remove")) {
+            usage.add(ChatColor.AQUA + "/playtime remove [user] [time]" + ChatColor.RESET
+                    + " - Remove time in seconds from the user's playtime.");
+        }
+        player.sendMessage(usage.toArray(new String[usage.size()]));
     }
 }
