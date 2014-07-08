@@ -188,7 +188,11 @@ public class NoPlaySoLong extends JavaPlugin {
         if (this.timeLoggedIn.containsKey(player)) {
             int timePlayed = (int) ((System.currentTimeMillis() / 1000) - this.timeLoggedIn
                     .get(player));
-            this.timePlayed.put(player, timePlayed);
+            if (this.timePlayed.containsKey(player)) {
+                this.timePlayed.put(this.timePlayed.get(player) + player, timePlayed);
+            } else {
+                this.timePlayed.put(player, timePlayed);
+            }
             this.timeLoggedIn.remove(player);
             getLogger().info(
                     "Player " + player + " played for a total of " + timePlayed + " seconds!");
