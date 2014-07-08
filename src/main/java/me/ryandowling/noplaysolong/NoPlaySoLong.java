@@ -79,10 +79,20 @@ public class NoPlaySoLong extends JavaPlugin {
             saveConfig();
         }
 
-        getLogger().info(
-                String.format("Server started at %s which was %s seconds ago!",
-                        getConfig().get("timeStarted"),
-                        ((System.currentTimeMillis() / 1000) - getConfig().getInt("timeStarted"))));
+        if (!getConfig().isSet("secondsBetweenPlayTimeChecks")) {
+            getConfig().set("secondsBetweenPlayTimeChecks", 10);
+            saveConfig();
+        }
+
+        if (!getConfig().isSet("secondsBetweenPlayTimeSaving")) {
+            getConfig().set("secondsBetweenPlayTimeSaving", 600);
+            saveConfig();
+        }
+
+        getLogger()
+                .info(String.format("Server started at %s which was %s seconds ago!", getConfig()
+                        .get("timeStarted"), this.secondsToDaysHoursSecondsString((int) ((System
+                        .currentTimeMillis() / 1000) - getConfig().getInt("timeStarted")))));
 
         PluginDescriptionFile pdfFile = this.getDescription();
         getLogger().info(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!");
@@ -92,14 +102,14 @@ public class NoPlaySoLong extends JavaPlugin {
 
         if (savePlayTimeTimer == null) {
             this.savePlayTimeTimer = new Timer();
-            this.savePlayTimeTimer.scheduleAtFixedRate(new PlayTimeSaverTask(this), 30 * 1000,
-                    10 * 60 * 1000);
+            this.savePlayTimeTimer.scheduleAtFixedRate(new PlayTimeSaverTask(this), 30000,
+                    getConfig().getInt("secondsBetweenPlayTimeSaving") * 1000);
         }
 
         if (checkPlayTimeTimer == null) {
             this.checkPlayTimeTimer = new Timer();
-            this.checkPlayTimeTimer.scheduleAtFixedRate(new PlayTimeCheckerTask(this), 30 * 1000,
-                    5 * 1000);
+            this.checkPlayTimeTimer.scheduleAtFixedRate(new PlayTimeCheckerTask(this), 30000,
+                    getConfig().getInt("secondsBetweenPlayTimeChecks") * 1000);
         }
     }
 
