@@ -6,6 +6,11 @@
  */
 package me.ryandowling.noplaysolong;
 
+import java.io.File;
+
+import me.ryandowling.noplaysolong.utils.FileUtils;
+import me.ryandowling.noplaysolong.utils.Timestamper;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -20,7 +25,12 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        FileUtils.appendStringToFile(new File(this.plugin.getDataFolder(), "playtime.log"),
+                String.format("[%s] %s logged in", Timestamper.now(), event.getPlayer().getName()));
         if (this.plugin.getTimeAllowedInSeconds(event.getPlayer().getName()) <= 0) {
+            FileUtils.appendStringToFile(new File(this.plugin.getDataFolder(), "playtime.log"),
+                    String.format("[%s] %s was kicked for exceeding play time", Timestamper.now(),
+                            event.getPlayer().getName()));
             event.getPlayer().kickPlayer(
                     "You have exceeded the time allowed to play! Come back in "
                             + this.plugin.secondsToDaysHoursSecondsString(this.plugin
@@ -32,6 +42,10 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        FileUtils
+                .appendStringToFile(new File(this.plugin.getDataFolder(), "playtime.log"), String
+                        .format("[%s] %s logged out", Timestamper.now(), event.getPlayer()
+                                .getName()));
         this.plugin.setPlayerLoggedOut(event.getPlayer().getName());
     }
 }

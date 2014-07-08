@@ -6,9 +6,12 @@
  */
 package me.ryandowling.noplaysolong.threads;
 
+import java.io.File;
 import java.util.TimerTask;
 
 import me.ryandowling.noplaysolong.NoPlaySoLong;
+import me.ryandowling.noplaysolong.utils.FileUtils;
+import me.ryandowling.noplaysolong.utils.Timestamper;
 
 import org.bukkit.entity.Player;
 
@@ -23,6 +26,10 @@ public class PlayTimeCheckerTask extends TimerTask {
     public void run() {
         for (Player player : this.plugin.getServer().getOnlinePlayers()) {
             if (this.plugin.getTimeAllowedInSeconds(player.getName()) <= 0) {
+                FileUtils.appendStringToFile(
+                        new File(this.plugin.getDataFolder(), "playtime.log"),
+                        String.format("[%s] %s was kicked for exceeding play time",
+                                Timestamper.now(), player.getName()));
                 player.kickPlayer("You have exceeded the time allowed to play! Come back in "
                         + this.plugin.secondsToDaysHoursSecondsString(this.plugin
                                 .secondsUntilNextDay()) + "!");
