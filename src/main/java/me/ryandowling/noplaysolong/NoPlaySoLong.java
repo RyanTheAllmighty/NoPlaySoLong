@@ -72,7 +72,7 @@ public class NoPlaySoLong extends JavaPlugin {
         }
 
         if (!getConfig().isSet("initialTime")) {
-            getConfig().set("initialTime", 28000);
+            getConfig().set("initialTime", 28800);
             saveConfig();
         }
 
@@ -124,16 +124,11 @@ public class NoPlaySoLong extends JavaPlugin {
     }
 
     public String secondsToDaysHoursSecondsString(int secondsToConvert) {
-        int totalSecs = 0;
-        if (secondsToConvert < 86400) {
-            totalSecs = 86400 - secondsToConvert;
-        } else {
-            totalSecs = secondsToConvert % 86400;
-        }
-        int hours = totalSecs / 3600;
-        int minutes = (totalSecs % 3600) / 60;
-        int seconds = totalSecs % 60;
-        return String.format("%02d hours, %02d minutes & %02d seconds", hours, minutes, seconds);
+        int hours = secondsToConvert / 3600;
+        int minutes = (secondsToConvert % 3600) / 60;
+        int seconds = secondsToConvert % 60;
+        return String.format("%02d hours, %02d minutes & %02d seconds (%d)", hours, minutes,
+                seconds, secondsToConvert);
     }
 
     public int getTimeAllowedInSeconds(String player) {

@@ -84,8 +84,9 @@ public class PlayTimeCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.GREEN
                             + "You have played for "
-                            + plugin.getPlayerPlayTime(player.getName())
-                            + " seconds and have "
+                            + plugin.secondsToDaysHoursSecondsString(plugin
+                                    .getPlayerPlayTime(player.getName()))
+                            + " and have "
                             + plugin.secondsToDaysHoursSecondsString(plugin
                                     .getTimeAllowedInSeconds(player.getName())) + " remaining!");
                     return true;
@@ -99,8 +100,9 @@ public class PlayTimeCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.GREEN
                             + args[1]
                             + " has played for "
-                            + plugin.getPlayerPlayTime(args[1])
-                            + " seconds and have "
+                            + plugin.secondsToDaysHoursSecondsString(plugin
+                                    .getPlayerPlayTime(args[1]))
+                            + " and has "
                             + plugin.secondsToDaysHoursSecondsString(plugin
                                     .getTimeAllowedInSeconds(args[1])) + " remaining!");
                     return true;
