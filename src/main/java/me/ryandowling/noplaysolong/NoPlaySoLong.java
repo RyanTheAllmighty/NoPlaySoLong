@@ -32,6 +32,8 @@ public class NoPlaySoLong extends JavaPlugin {
     private Map<String, Integer> timePlayed = new HashMap<String, Integer>();
     private Map<String, Integer> timeLoggedIn = new HashMap<String, Integer>();
 
+    private boolean shutdownHookAdded = false;
+
     @Override
     public void onDisable() {
         this.savePlayTime(); // Save the playtime to file on plugin disable
@@ -39,6 +41,18 @@ public class NoPlaySoLong extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (!this.shutdownHookAdded) {
+            this.shutdownHookAdded = true;
+            try {
+                Runtime.getRuntime().addShutdownHook(new Thread() {
+                    public void run() {
+                        savePlayTime(); // Save playtime when server is shut down
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         // Register our events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(playerListener, this);
