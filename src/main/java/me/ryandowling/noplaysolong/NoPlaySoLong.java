@@ -35,6 +35,7 @@ public class NoPlaySoLong extends JavaPlugin {
     private final BlockListener blockListener = new BlockListener();
     private Map<String, Integer> timePlayed = new HashMap<String, Integer>();
     private Map<String, Integer> timeLoggedIn = new HashMap<String, Integer>();
+    private Map<String, Boolean> seenWarningMessages = new HashMap<String, Boolean>();
 
     private boolean shutdownHookAdded = false;
     private Timer savePlayTimeTimer = null;
@@ -98,7 +99,7 @@ public class NoPlaySoLong extends JavaPlugin {
         if (checkPlayTimeTimer == null) {
             this.checkPlayTimeTimer = new Timer();
             this.checkPlayTimeTimer.scheduleAtFixedRate(new PlayTimeCheckerTask(this), 30 * 1000,
-                    1 * 60 * 1000);
+                    5 * 1000);
         }
     }
 
@@ -165,6 +166,10 @@ public class NoPlaySoLong extends JavaPlugin {
     }
 
     public void setPlayerLoggedIn(String player) {
+        if (!this.timePlayed.containsKey(player)) {
+            this.timePlayed.put(player, 0);
+            this.savePlayTime();
+        }
         this.timeLoggedIn.put(player, (int) (System.currentTimeMillis() / 1000));
     }
 
@@ -182,6 +187,18 @@ public class NoPlaySoLong extends JavaPlugin {
                     "Player " + player + " played for a total of " + timePlayed + " seconds!");
             this.savePlayTime();
         }
+    }
+
+    public boolean hasPlayerSeenMessage(String player, int time) {
+        if (this.seenWarningMessages.containsKey(player + ":" + time)) {
+            return this.seenWarningMessages.get(player + ":" + time);
+        } else {
+            return false;
+        }
+    }
+
+    public void sentPlayerWarningMessage(String player, int time) {
+        this.seenWarningMessages.put(player + ":" + time, true);
     }
 
     @SuppressWarnings("unchecked")
