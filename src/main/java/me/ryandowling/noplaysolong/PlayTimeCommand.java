@@ -83,7 +83,9 @@ public class PlayTimeCommand implements CommandExecutor {
                     return false;
                 } else {
                     player.sendMessage(ChatColor.GREEN + "You have played for "
-                            + plugin.getPlayerPlayTime(player.getName()) + " seconds!");
+                            + plugin.getPlayerPlayTime(player.getName()) + " seconds and have "
+                            + plugin.getTimeAllowedInSeconds(player.getName())
+                            + " seconds remaining!");
                     return true;
                 }
             } else {
@@ -93,7 +95,8 @@ public class PlayTimeCommand implements CommandExecutor {
                     return false;
                 } else {
                     player.sendMessage(ChatColor.GREEN + args[1] + " has played for "
-                            + plugin.getPlayerPlayTime(args[1]) + " seconds!");
+                            + plugin.getPlayerPlayTime(args[1]) + " seconds and have "
+                            + plugin.getTimeAllowedInSeconds(args[1]) + " seconds remaining!");
                     return true;
                 }
             }

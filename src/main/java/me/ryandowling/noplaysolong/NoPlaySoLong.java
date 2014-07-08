@@ -64,6 +64,26 @@ public class NoPlaySoLong extends JavaPlugin {
         // Register our commands
         getCommand("playtime").setExecutor(new PlayTimeCommand(this));
 
+        if (!getConfig().isSet("timeStarted")) {
+            getConfig().set("timeStarted", (System.currentTimeMillis() / 1000));
+            saveConfig();
+        }
+
+        if (!getConfig().isSet("initialTime")) {
+            getConfig().set("initialTime", 28000);
+            saveConfig();
+        }
+
+        if (!getConfig().isSet("timePerDay")) {
+            getConfig().set("timePerDay", 3600);
+            saveConfig();
+        }
+
+        getLogger().info(
+                String.format("Server started at %s which was %s seconds ago!",
+                        getConfig().get("timeStarted"),
+                        ((System.currentTimeMillis() / 1000) - getConfig().getInt("timeStarted"))));
+
         PluginDescriptionFile pdfFile = this.getDescription();
         getLogger().info(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!");
 
@@ -79,6 +99,27 @@ public class NoPlaySoLong extends JavaPlugin {
                 }
             }, 30 * 1000, 10 * 60 * 1000);
         }
+    }
+
+    public int getTimeAllowedInSeconds(String player) {
+        int timeStarted = getConfig().getInt("timeStarted");
+        int secondsSince = (int) ((System.currentTimeMillis() / 1000) - timeStarted);
+        int secondsAllowed = 0;
+
+        // Add the initial time we give the player at the beginning
+        secondsAllowed += getConfig().getInt("initialTime");
+
+        // Then for each day including the first day (24 hours realtime) add the set amount of
+        // seconds to the time allowed
+        while (secondsSince >= 0) {
+            secondsAllowed += getConfig().getInt("timePerDay");
+            secondsSince -= 86400;
+        }
+
+        // Remove the amount of time the player has played to get their time allowed
+        secondsAllowed -= getPlayerPlayTime(player);
+
+        return secondsAllowed;
     }
 
     public void addPlayTime(String player, int seconds) {
