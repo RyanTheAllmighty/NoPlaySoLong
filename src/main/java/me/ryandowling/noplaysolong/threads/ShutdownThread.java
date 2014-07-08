@@ -17,6 +17,6 @@ public class ShutdownThread extends Thread {
 
     @Override
     public void run() {
-        this.plugin.savePlayTime(); // Save playtime when server is shut down
+        this.plugin.savePlayTime(true); // Force save playtime when server is shut down
     }
 }

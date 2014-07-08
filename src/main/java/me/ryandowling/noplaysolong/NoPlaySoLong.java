@@ -220,6 +220,15 @@ public class NoPlaySoLong extends JavaPlugin {
     }
 
     public void savePlayTime() {
+        this.savePlayTime(false);
+    }
+
+    public void savePlayTime(boolean force) {
+        if (force) {
+            for (String key : this.timeLoggedIn.keySet()) {
+                this.setPlayerLoggedOut(key);
+            }
+        }
         File file = new File(getDataFolder(), "playtime.dat");
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
