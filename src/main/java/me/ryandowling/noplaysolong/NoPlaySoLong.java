@@ -15,11 +15,12 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import me.ryandowling.noplaysolong.exceptions.UnknownPlayerException;
+import me.ryandowling.noplaysolong.threads.PlayTimeCheckerTask;
+import me.ryandowling.noplaysolong.threads.PlayTimeSaverTask;
+import me.ryandowling.noplaysolong.threads.ShutdownThread;
 
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,11 +50,7 @@ public class NoPlaySoLong extends JavaPlugin {
         if (!this.shutdownHookAdded) {
             this.shutdownHookAdded = true;
             try {
-                Runtime.getRuntime().addShutdownHook(new Thread() {
-                    public void run() {
-                        savePlayTime(); // Save playtime when server is shut down
-                    }
-                });
+                Runtime.getRuntime().addShutdownHook(new ShutdownThread(this));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -94,27 +91,14 @@ public class NoPlaySoLong extends JavaPlugin {
 
         if (savePlayTimeTimer == null) {
             this.savePlayTimeTimer = new Timer();
-            this.savePlayTimeTimer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    savePlayTime(); // Save playtime every 10 minutes
-                }
-            }, 30 * 1000, 10 * 60 * 1000);
+            this.savePlayTimeTimer.scheduleAtFixedRate(new PlayTimeSaverTask(this), 30 * 1000,
+                    10 * 60 * 1000);
         }
 
         if (checkPlayTimeTimer == null) {
             this.checkPlayTimeTimer = new Timer();
-            this.checkPlayTimeTimer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    for (Player player : getServer().getOnlinePlayers()) {
-                        if (getTimeAllowedInSeconds(player.getName()) <= 0) {
-                            player.kickPlayer("You have exceeded the time allowed to play! Come back in "
-                                    + secondsToDaysHoursSecondsString(secondsUntilNextDay()) + "!");
-                        }
-                    }
-                }
-            }, 30 * 1000, 1 * 60 * 1000);
+            this.checkPlayTimeTimer.scheduleAtFixedRate(new PlayTimeCheckerTask(this), 30 * 1000,
+                    1 * 60 * 1000);
         }
     }
 
