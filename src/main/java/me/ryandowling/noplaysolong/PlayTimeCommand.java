@@ -120,8 +120,15 @@ public class PlayTimeCommand implements CommandExecutor {
             usage.add(ChatColor.AQUA + "/playtime add [user] [time]" + ChatColor.RESET
                     + " - Add time in seconds to the user's playtime.");
         }
-        usage.add(ChatColor.AQUA + "/playtime check [user]" + ChatColor.RESET
-                + " - Check the time played for a given user, or if blank, for yourself.");
+        if (player.hasPermission("noplaysolong.playtime.check.others")) {
+            usage.add(ChatColor.AQUA
+                    + "/playtime check [user]"
+                    + ChatColor.RESET
+                    + " - Check the time played and time left for a given user, or if blank, for yourself.");
+        } else if (player.hasPermission("noplaysolong.playtime.check.self")) {
+            usage.add(ChatColor.AQUA + "/playtime check" + ChatColor.RESET
+                    + " - Check the time played and time left for yourself.");
+        }
         if (player.hasPermission("noplaysolong.playtime.remove")) {
             usage.add(ChatColor.AQUA + "/playtime remove [user] [time]" + ChatColor.RESET
                     + " - Remove time in seconds from the user's playtime.");
