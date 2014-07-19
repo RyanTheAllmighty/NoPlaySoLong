@@ -21,6 +21,7 @@ import me.ryandowling.noplaysolong.threads.PlayTimeCheckerTask;
 import me.ryandowling.noplaysolong.threads.PlayTimeSaverTask;
 import me.ryandowling.noplaysolong.threads.ShutdownThread;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +41,7 @@ public class NoPlaySoLong extends JavaPlugin {
     private boolean shutdownHookAdded = false;
     private Timer savePlayTimeTimer = null;
     private Timer checkPlayTimeTimer = null;
+    private boolean started = false;
 
     @Override
     public void onDisable() {
@@ -64,9 +66,8 @@ public class NoPlaySoLong extends JavaPlugin {
         // Register our commands
         getCommand("playtime").setExecutor(new PlayTimeCommand(this));
 
-        if (!getConfig().isSet("timeStarted")) {
-            getConfig().set("timeStarted", (System.currentTimeMillis() / 1000));
-            saveConfig();
+        if (getConfig().isSet("timeStarted")) {
+            this.started = true;
         }
 
         if (!getConfig().isSet("initialTime")) {
@@ -211,8 +212,32 @@ public class NoPlaySoLong extends JavaPlugin {
         this.seenWarningMessages.put(player + ":" + time, true);
     }
 
+    public boolean start() {
+        if (this.started) {
+            return false;
+        } else {
+            this.started = true;
+            String initial = (getConfig().getInt("initialTime") / 60 / 60) + "";
+            String perday = (getConfig().getInt("timePerDay") / 60 / 60) + "";
+            getServer().broadcastMessage(
+                    ChatColor.GREEN + "Playtime has now started! You have " + initial
+                            + " hour/s of playtime to start with and " + perday
+                            + " hour/s of playtime added per day!");
+            getConfig().set("timeStarted", (System.currentTimeMillis() / 1000));
+            saveConfig();
+            return true;
+        }
+    }
+
+    public boolean hasStarted() {
+        return this.started;
+    }
+
     @SuppressWarnings("unchecked")
     public void loadPlayTime() {
+        if (!hasStarted()) {
+            return;
+        }
         File file = new File(getDataFolder(), "playtime.dat");
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
@@ -251,6 +276,9 @@ public class NoPlaySoLong extends JavaPlugin {
     }
 
     public void savePlayTime(boolean force) {
+        if (!hasStarted()) {
+            return;
+        }
         if (force) {
             for (String key : this.timeLoggedIn.keySet()) {
                 this.setPlayerLoggedOut(key);

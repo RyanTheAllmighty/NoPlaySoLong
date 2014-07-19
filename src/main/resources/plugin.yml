@@ -13,6 +13,7 @@ permissions:
       noplaysolong.playtime.check.remove: true
       noplaysolong.playtime.check.self: true
       noplaysolong.playtime.check.others: true
+      noplaysolong.start: true
   noplaysolong.playtime.add:
     description: Gives access to be able to add time to a players play time.
     default: op
@@ -24,4 +25,7 @@ permissions:
     default: true
   noplaysolong.playtime.check.others:
     description: Gives access to the /playtime check command to check others playtime.
+    default: op
+  noplaysolong.start:
+    description: Gives access to the /playtime start command which starts the timer.
     default: op

@@ -37,10 +37,27 @@ public class PlayTimeCommand implements CommandExecutor {
             return false;
         }
 
-        if (args[0].equals("add") && args.length == 3) {
+        if (args[0].equals("start") && args.length == 1) {
+            if (!player.hasPermission("noplaysolong.start")) {
+                player.sendMessage(ChatColor.RED
+                        + "You don't have permission to start the playtime counter!");
+                return false;
+            } else {
+                if (plugin.start()) {
+                    return true;
+                } else {
+                    player.sendMessage(ChatColor.RED + "Playtime already started!");
+                    return false;
+                }
+            }
+        } else if (args[0].equals("add") && args.length == 3) {
+            if (!plugin.hasStarted()) {
+                player.sendMessage(ChatColor.RED + "Playtime hasn't started yet!");
+                return false;
+            }
             if (!player.hasPermission("noplaysolong.playtime.add")) {
                 player.sendMessage(ChatColor.RED
-                        + "You don't have permission to add time to a players playtime!!");
+                        + "You don't have permission to add time to a players playtime!");
                 return false;
             } else {
                 try {
@@ -55,6 +72,10 @@ public class PlayTimeCommand implements CommandExecutor {
                 return true;
             }
         } else if (args[0].equals("remove") && args.length == 3) {
+            if (!plugin.hasStarted()) {
+                player.sendMessage(ChatColor.RED + "Playtime hasn't started yet!");
+                return false;
+            }
             if (!player.hasPermission("noplaysolong.playtime.remove")) {
                 player.sendMessage(ChatColor.RED
                         + "You don't have permission to remove time from a players playtime!!");
@@ -76,6 +97,10 @@ public class PlayTimeCommand implements CommandExecutor {
                 return true;
             }
         } else if (args[0].equals("check")) {
+            if (!plugin.hasStarted()) {
+                player.sendMessage(ChatColor.RED + "Playtime hasn't started yet!");
+                return false;
+            }
             if (args.length == 1) {
                 if (!player.hasPermission("noplaysolong.playtime.check.self")) {
                     player.sendMessage(ChatColor.RED
