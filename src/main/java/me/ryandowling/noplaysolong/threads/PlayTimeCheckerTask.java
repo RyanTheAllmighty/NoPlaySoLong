@@ -41,13 +41,15 @@ public class PlayTimeCheckerTask extends TimerTask {
                         + ChatColor.RESET
                         + " You have less than 10 seconds of playtime left! Stop what your doing and prepare to be disconnected!");
                 this.plugin.sentPlayerWarningMessage(player.getName(), 10);
-            } else if (timeLeft <= 60 && !this.plugin.hasPlayerSeenMessage(player.getName(), 60)) {
+            } else if (timeLeft <= 60 && timeLeft > 10
+                    && !this.plugin.hasPlayerSeenMessage(player.getName(), 60)) {
                 player.sendMessage(ChatColor.RED
                         + "WARNING!"
                         + ChatColor.RESET
                         + " You have less than 60 seconds of playtime left! Stop what your doing and prepare to be disconnected!");
                 this.plugin.sentPlayerWarningMessage(player.getName(), 60);
-            } else if (timeLeft <= 300 && !this.plugin.hasPlayerSeenMessage(player.getName(), 300)) {
+            } else if (timeLeft <= 300 && timeLeft > 60
+                    && !this.plugin.hasPlayerSeenMessage(player.getName(), 300)) {
                 player.sendMessage(ChatColor.RED
                         + "WARNING!"
                         + ChatColor.RESET
