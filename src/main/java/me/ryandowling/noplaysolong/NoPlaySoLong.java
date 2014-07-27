@@ -131,7 +131,7 @@ public class NoPlaySoLong extends JavaPlugin {
                 seconds, secondsToConvert);
     }
 
-    public int getTimeAllowedInSeconds(String player) {
+    public int getTimeAllowedInSeconds() {
         int timeStarted = getConfig().getInt("timeStarted");
         int secondsSince = (int) ((System.currentTimeMillis() / 1000) - timeStarted);
         int secondsAllowed = 0;
@@ -145,6 +145,12 @@ public class NoPlaySoLong extends JavaPlugin {
             secondsAllowed += getConfig().getInt("timePerDay");
             secondsSince -= 86400;
         }
+
+        return secondsAllowed;
+    }
+
+    public int getTimeAllowedInSeconds(String player) {
+        int secondsAllowed = this.getTimeAllowedInSeconds();
 
         // Remove the amount of time the player has played to get their time allowed
         secondsAllowed -= getPlayerPlayTime(player);
@@ -193,10 +199,12 @@ public class NoPlaySoLong extends JavaPlugin {
             int timePlayed = (int) ((System.currentTimeMillis() / 1000) - this.timeLoggedIn
                     .get(player));
             if (this.timePlayed.containsKey(player)) {
-                this.timePlayed.put(player, this.timePlayed.get(player) + timePlayed);
-            } else {
-                this.timePlayed.put(player, timePlayed);
+                timePlayed += this.timePlayed.get(player);
             }
+            if (timePlayed > this.getTimeAllowedInSeconds()) {
+                timePlayed = this.getTimeAllowedInSeconds();
+            }
+            this.timePlayed.put(player, timePlayed);
             this.timeLoggedIn.remove(player);
             getLogger().info(
                     "Player " + player + " played for a total of " + timePlayed + " seconds!");
