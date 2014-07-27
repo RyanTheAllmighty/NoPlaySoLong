@@ -120,7 +120,13 @@ public class NoPlaySoLong extends JavaPlugin {
 
     public int secondsUntilNextDay() {
         int timeStarted = getConfig().getInt("timeStarted");
-        return (int) ((System.currentTimeMillis() / 1000) - timeStarted);
+        int secondsSince = (int) ((System.currentTimeMillis() / 1000) - timeStarted);
+
+        while (secondsSince >= 86400) {
+            secondsSince -= 86400;
+        }
+
+        return secondsSince;
     }
 
     public String secondsToDaysHoursSecondsString(int secondsToConvert) {
