@@ -11,6 +11,7 @@ import java.io.File;
 import me.ryandowling.noplaysolong.utils.FileUtils;
 import me.ryandowling.noplaysolong.utils.Timestamper;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -38,6 +39,12 @@ public class PlayerListener implements Listener {
         } else {
             this.plugin.setPlayerLoggedIn(event.getPlayer().getName());
         }
+        event.getPlayer().sendMessage(
+                "You have "
+                        + ChatColor.GREEN
+                        + plugin.secondsToDaysHoursSecondsString(plugin
+                                .getTimeAllowedInSeconds(event.getPlayer().getName()))
+                        + ChatColor.RESET + " of playtime left!");
     }
 
     @EventHandler
