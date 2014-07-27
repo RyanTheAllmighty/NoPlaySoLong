@@ -133,8 +133,7 @@ public class NoPlaySoLong extends JavaPlugin {
         int hours = secondsToConvert / 3600;
         int minutes = (secondsToConvert % 3600) / 60;
         int seconds = secondsToConvert % 60;
-        return String.format("%02d hours, %02d minutes & %02d seconds (%d)", hours, minutes,
-                seconds, secondsToConvert);
+        return String.format("%02d hours, %02d minutes & %02d seconds", hours, minutes, seconds);
     }
 
     public int getTimeAllowedInSeconds() {
