@@ -202,6 +202,15 @@ public class NoPlaySoLong extends JavaPlugin {
                     "Player " + player + " played for a total of " + timePlayed + " seconds!");
             this.savePlayTime();
         }
+        if (this.seenWarningMessages.containsKey(player + ":10")) {
+            this.seenWarningMessages.remove(player + ":10");
+        }
+        if (this.seenWarningMessages.containsKey(player + ":60")) {
+            this.seenWarningMessages.remove(player + ":60");
+        }
+        if (this.seenWarningMessages.containsKey(player + ":300")) {
+            this.seenWarningMessages.remove(player + ":300");
+        }
     }
 
     public boolean hasPlayerSeenMessage(String player, int time) {
