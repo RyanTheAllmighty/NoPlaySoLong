@@ -9,8 +9,8 @@ permissions:
   noplaysolong.*:
     description: Gives access to all No Play So Long commands.
     children:
-      noplaysolong.playtime.check.add: true
-      noplaysolong.playtime.check.remove: true
+      noplaysolong.playtime.add: true
+      noplaysolong.playtime.remove: true
       noplaysolong.playtime.check.self: true
       noplaysolong.playtime.check.others: true
       noplaysolong.start: true
